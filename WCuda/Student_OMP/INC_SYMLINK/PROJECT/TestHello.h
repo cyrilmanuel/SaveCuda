@@ -1,1 +1,1 @@
-/home/bilat/CBI/CoursCuda/toStudent/code/WCuda/Student_OMP//src/cpp/test/unit/01_Test_Hello/TestHello.h
+/home/arc7/SaveCuda/WCuda/Student_OMP/src/cpp/test/unit/01_Test_Hello/TestHello.h

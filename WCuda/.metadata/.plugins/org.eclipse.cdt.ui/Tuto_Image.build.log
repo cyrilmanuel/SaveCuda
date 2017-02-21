@@ -1,4 +1,4 @@
-15:07:10 **** Build of configuration GCC_parallel for project Tuto_Image ****
+12:56:06 **** Incremental Build of configuration GCC_parallel for project Tuto_Image ****
 cbicc gcc jall 
 
 --------------------------------------------------------
@@ -77,13 +77,13 @@ warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 ==================================================================================
 [CBI] -> Target Name  : Tuto_Image_gcc_x86_64
 [CBI] ->
-[CBI] -> Build     	  : /tmp/ramdrive/bilat/Targets/Tuto_Image/bin/Tuto_Image_gcc_x86_64.run
+[CBI] -> Build     	  : /tmp/ramdrive/arc7/Targets/Tuto_Image/bin/Tuto_Image_gcc_x86_64.run
 [CBI] -> Deploy       : ../RELEASE/bin
 [CBI] ->
 [CBI] -> Type	 	  : EXE
 [CBI] -> Arch	 	  : x86_64
 [CBI] -> OS	 		  : Linux
-[CBI] -> User	 	  : bilat
+[CBI] -> User	 	  : arc7
 [CBI] ->
 [CBI] -> Task		  : Compiling-Linking
 ==================================================================================
@@ -191,8 +191,8 @@ warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 [CBI] ->              : GLU
 [CBI] ->              : glut
 
-[CBI] -> Create folder : /tmp/ramdrive/bilat/Targets/Tuto_Image/bin
-[CBI] -> Create folder : /tmp/ramdrive/bilat/Targets/Tuto_Image/obj
+[CBI] -> Create folder : /tmp/ramdrive/arc7/Targets/Tuto_Image/bin
+[CBI] -> Create folder : /tmp/ramdrive/arc7/Targets/Tuto_Image/obj
 
 [CBI] -> Compilation parallel (32 threads)
 
@@ -218,13 +218,13 @@ warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 [Tuto_Image_gcc_x86_64] -> g++ compiling .cpp : src/core/02_simple_type/04_Damier_HUE_float/01_animable/DamierHueFloat.cpp
 [Tuto_Image_gcc_x86_64] -> g++ compiling .cpp : src/core/02_simple_type/04_Damier_HUE_float/02_Provider/DamierHueFloatProvider.cpp
 [Tuto_Image_gcc_x86_64] -> g++ compiling .cpp : src/core/02_simple_type/01_Vague_GRAY_uchar/01_animable/VagueGray.cpp
-[Tuto_Image_gcc_x86_64] -> g++ compiling .cpp : src/core/02_simple_type/02_Damier_RGBA_float4/01_animable/DamierRGBAFloat.cpp
 [Tuto_Image_gcc_x86_64] -> g++ compiling .cpp : src/core/02_simple_type/01_Vague_GRAY_uchar/02_Provider/VagueGrayProvider.cpp
+[Tuto_Image_gcc_x86_64] -> g++ compiling .cpp : src/core/02_simple_type/02_Damier_RGBA_float4/01_animable/DamierRGBAFloat.cpp
 [Tuto_Image_gcc_x86_64] -> g++ compiling .cpp : src/core/02_simple_type/02_Damier_RGBA_float4/02_Provider/DamierRGBAFloatProvider.cpp
 [Tuto_Image_gcc_x86_64] -> g++ compiling .cpp : src/core/02_simple_type/03_Damier_HSBA_float4/01_animable/DamierHSBAFloat.cpp
 [Tuto_Image_gcc_x86_64] -> g++ compiling .cpp : src/core/02_simple_type/03_Damier_HSBA_float4/02_Provider/DamierHSBAFloatProvider.cpp
 
-[CBI] -> Linking to   : /tmp/ramdrive/bilat/Targets/Tuto_Image/bin/Tuto_Image_gcc_x86_64.run
+[CBI] -> Linking to   : /tmp/ramdrive/arc7/Targets/Tuto_Image/bin/Tuto_Image_gcc_x86_64.run
 
 [CBI] -> Library Link :
 [CBI] ->              : -lBilatTools_CPP_301_004_gcc_x86_64
@@ -244,17 +244,17 @@ warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 ==================================================================================
 [CBI] -> Target Name  : Tuto_Image_gcc_x86_64
-[CBI] -> Location     : /tmp/ramdrive/bilat/Targets/Tuto_Image/bin/Tuto_Image_gcc_x86_64.run
+[CBI] -> Location     : /tmp/ramdrive/arc7/Targets/Tuto_Image/bin/Tuto_Image_gcc_x86_64.run
 [CBI] -> Deploy 	  : ../RELEASE/bin
 [CBI] ->
 [CBI] -> Type	 	  : EXE
 [CBI] -> Arch	 	  : x86_64
 [CBI] -> OS	 		  : Linux
-[CBI] -> User	 	  : bilat
+[CBI] -> User	 	  : arc7
 [CBI] ->
 [CBI] -> Compilateur  : g++
 [CBI] -> Task	      : End Compiling-Linking !
-[CBI] -> Time		  : 2 (s)
+[CBI] -> Time		  : 4 (s)
 ==================================================================================
 
 
@@ -266,5 +266,5 @@ warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 [CBI] -> Tuto_Image_gcc_x86_64 : End ALL!
 
 
-15:07:12 Build Finished (took 2s.587ms)
+12:56:11 Build Finished (took 5s.414ms)
 

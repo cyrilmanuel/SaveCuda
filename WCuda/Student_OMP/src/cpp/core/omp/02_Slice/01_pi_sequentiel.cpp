@@ -8,7 +8,6 @@
  |*		Imported	 	*|
  \*-------------------------------------*/
 
-
 /*--------------------------------------*\
  |*		Public			*|
  \*-------------------------------------*/
@@ -31,7 +30,7 @@ static double piSequentiel(int n);
 
 bool isPiSequentiel_OK(int n)
     {
-    return isAlgoPI_OK(piSequentiel,  n, "Pi Sequentiel");
+    return isAlgoPI_OK(piSequentiel, n, "Pi Sequentiel");
     }
 
 /*--------------------------------------*\
@@ -40,8 +39,15 @@ bool isPiSequentiel_OK(int n)
 
 double piSequentiel(int n)
     {
-   //TODO
-    return -1;
+    double somme = 0;
+    const double DX = 1/(double)n;
+    for (int i = 1; i <= n; i++)
+	{
+	double xi = i* DX;
+	somme += fpi(xi);
+	}
+
+    return somme*DX;
     }
 
 /*----------------------------------------------------------------------*\

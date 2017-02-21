@@ -10,7 +10,6 @@
  |*		Imported	 	*|
  \*-------------------------------------*/
 
-
 /*--------------------------------------*\
  |*		Public			*|
  \*-------------------------------------*/
@@ -33,7 +32,7 @@ static double piOMPEntrelacerAtomic(int n);
 
 bool isPiOMPEntrelacerAtomic_Ok(int n)
     {
-    return isAlgoPI_OK(piOMPEntrelacerAtomic,  n, "Pi OMP Entrelacer atomic");
+    return isAlgoPI_OK(piOMPEntrelacerAtomic, n, "Pi OMP Entrelacer atomic");
     }
 
 /*--------------------------------------*\
@@ -45,8 +44,28 @@ bool isPiOMPEntrelacerAtomic_Ok(int n)
  */
 double piOMPEntrelacerAtomic(int n)
     {
-   // TODO
-    return -1;
+    const int NB_THREAD = OmpTools::setAndGetNaturalGranularity();
+    const double DX = 1 / (double) n;
+    double sumGlobal = 0;
+
+# pragma omp parallel shared(sumGlobal) // variable sum est partagé par tous les threads, optionnel
+	{ // car comportement par défaut.
+	const int TID = OmpTools::getTid();
+	int s = TID;
+	double sumLocal = 0;
+
+	while (s < n)
+	    {
+	    double xs = s * DX;
+	    sumLocal += fpi(xs);
+	    s += NB_THREAD;
+	    }
+#pragma omp atomic
+
+	sumGlobal += sumLocal;
+
+	} // barrière de synchronisation implicite
+    return sumGlobal * DX;
     }
 
 /*----------------------------------------------------------------------*\

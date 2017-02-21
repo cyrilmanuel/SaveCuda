@@ -1,4 +1,4 @@
-15:07:58 **** Build of configuration CudaGCC_parallel for project Student_Cuda_Image ****
+12:41:12 **** Build of configuration CudaGCC_parallel for project Student_Cuda_Image ****
 cbicc cuda jall 
 
 --------------------------------------------------------
@@ -84,13 +84,13 @@ Cuda compilation tools, release 8.0, V8.0.44
 ==================================================================================
 [CBI] -> Target Name  : Student_Cuda_Image_cuda_80_x86_64
 [CBI] ->
-[CBI] -> Build        : /tmp/ramdrive/bilat/Targets/Student_Cuda_Image/bin/Student_Cuda_Image_cuda_80_x86_64.run
+[CBI] -> Build        : /tmp/ramdrive/arc7/Targets/Student_Cuda_Image/bin/Student_Cuda_Image_cuda_80_x86_64.run
 [CBI] -> Deploy       : ../RELEASE/bin
 [CBI] ->
 [CBI] -> Type	      : EXE
 [CBI] -> Arch	      : x86_64
 [CBI] -> OS	 		  : Linux
-[CBI] -> User	 	  : bilat
+[CBI] -> User	 	  : arc7
 [CBI] ->
 [CBI] -> Task		  : Compiling-Linking !
 ==================================================================================
@@ -365,9 +365,9 @@ Cuda compilation tools, release 8.0, V8.0.44
 [CBI] ->              : opencv_videoio_gcc484
 [CBI] ->              : opencv_videostab_gcc484
 
-[CBI] -> Create folder : /tmp/ramdrive/bilat/Targets/Student_Cuda_Image/bin
-[CBI] -> Create folder : /tmp/ramdrive/bilat/Targets/Student_Cuda_Image/obj
-[CBI] -> Create folder : /tmp/ramdrive/bilat/Targets/Student_Cuda_Image/cubin
+[CBI] -> Create folder : /tmp/ramdrive/arc7/Targets/Student_Cuda_Image/bin
+[CBI] -> Create folder : /tmp/ramdrive/arc7/Targets/Student_Cuda_Image/obj
+[CBI] -> Create folder : /tmp/ramdrive/arc7/Targets/Student_Cuda_Image/cubin
 
 [CBI] -> Compilation parallel (32 threads)
 
@@ -386,7 +386,7 @@ src/cpp/core/01_Rippling/01_animable/device/ripplingDevice.cu(47): warning: vari
 src/cpp/core/01_Rippling/01_animable/device/ripplingDevice.cu(47): warning: variable "WH" was declared but never referenced
 
 
-[CBI] -> Linking to   : /tmp/ramdrive/bilat/Targets/Student_Cuda_Image/bin/Student_Cuda_Image_cuda_80_x86_64.run
+[CBI] -> Linking to   : /tmp/ramdrive/arc7/Targets/Student_Cuda_Image/bin/Student_Cuda_Image_cuda_80_x86_64.run
 
 [CBI] -> Library Link :
 [CBI] ->
@@ -514,13 +514,13 @@ src/cpp/core/01_Rippling/01_animable/device/ripplingDevice.cu(47): warning: vari
 
 ==================================================================================
 [CBI] -> Target Name  : Student_Cuda_Image_cuda_80_x86_64
-[CBI] -> Location     : /tmp/ramdrive/bilat/Targets/Student_Cuda_Image/bin/Student_Cuda_Image_cuda_80_x86_64.run
+[CBI] -> Location     : /tmp/ramdrive/arc7/Targets/Student_Cuda_Image/bin/Student_Cuda_Image_cuda_80_x86_64.run
 [CBI] -> Deploy 	  : ../RELEASE/bin
 [CBI] ->
 [CBI] -> Type	 	  : EXE
 [CBI] -> Arch	 	  : x86_64
 [CBI] -> OS	 	      : Linux
-[CBI] -> User	 	  : bilat
+[CBI] -> User	 	  : arc7
 [CBI] ->
 [CBI] -> Compilateur  : g++ && nvcc
 [CBI] -> Task		  : End Compiling-Linking !
@@ -536,5 +536,5 @@ src/cpp/core/01_Rippling/01_animable/device/ripplingDevice.cu(47): warning: vari
 [CBI] -> Student_Cuda_Image_cuda_80_x86_64 : End ALL!
 
 
-15:08:02 Build Finished (took 3s.982ms)
+12:41:15 Build Finished (took 3s.377ms)
 

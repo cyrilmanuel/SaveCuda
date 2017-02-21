@@ -50,8 +50,35 @@ bool isPiOMPforPromotionTab_Ok(int n)
  */
 double piOMPforPromotionTab(int n)
     {
-   //TODO
-    return -1;
+    double somme = 0;
+    const int NB_THREAD = OmpTools::setAndGetNaturalGranularity();
+    const double DX = 1 / (double) n;
+    double* tab = new double[NB_THREAD];  // tableau créer sur le tas
+    double xi = 0;
+
+
+#pragma omp parallel for
+    for(int i=1;i<=NB_THREAD;i++)
+	{
+	tab[i] = 0;
+	}
+
+#pragma omp parallel for private(xi) // fait le for en parallel
+    for (int i = 1; i <= n; i++)
+	{
+	const int TID = OmpTools::getTid();
+	xi = i * DX;
+	tab[TID] += fpi(xi);
+	}
+
+    //réduction additive séquentielle
+    for(int i=1;i<=NB_THREAD;i++)
+	{
+	 somme += tab[i];
+	}
+
+    delete[] tab;
+    return somme * DX;
     }
 
 

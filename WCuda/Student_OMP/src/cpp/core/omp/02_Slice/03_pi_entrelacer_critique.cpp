@@ -41,8 +41,29 @@ bool isPiOMPEntrelacerCritical_Ok(int n)
 
 double piOMPEntrelacerCritical(int n)
     {
-   //TODO
-    return -1;
+    const int NB_THREAD = OmpTools::setAndGetNaturalGranularity();
+    const double DX = 1 / (double) n;
+    double sumGlobal = 0;
+
+# pragma omp parallel
+	{
+	const int TID = OmpTools::getTid();
+	int s = TID;
+	double sumLocal = 0;
+
+	while (s < n)
+	    {
+	    double xs = s * DX;
+	    sumLocal += fpi(xs);
+	    s += NB_THREAD;
+	    }
+#pragma omp critical (blabla)
+	    {
+	    sumGlobal += sumLocal;
+	    }
+
+	} // barrière de synchronisation implicite
+    return sumGlobal * DX;
     }
 
 /*----------------------------------------------------------------------*\

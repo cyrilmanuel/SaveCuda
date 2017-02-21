@@ -1,1 +1,1 @@
-/home/bilat/CBI/CoursCuda/toStudent/code/WCuda/Tuto_Image/src/core/03_advanced/04_opengl_pure/03_provider/MyDisplayableProvider.h
+/home/arc7/SaveCuda/WCuda/Tuto_Image/src/core/03_advanced/04_opengl_pure/03_provider/MyDisplayableProvider.h

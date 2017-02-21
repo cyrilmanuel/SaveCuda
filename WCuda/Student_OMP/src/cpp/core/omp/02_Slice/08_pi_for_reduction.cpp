@@ -47,8 +47,17 @@ bool isPiOMPforReduction_Ok(int n)
  */
 double piOMPforReduction(int n)
     {
-  //TODO
-    return -1;
+
+    double somme = 0;
+        const double DX = 1/(double)n;
+#pragma opm parallel for reduction(+:somme)
+        for (int i = 1; i <= n; i++)
+    	{
+    	double xi = i* DX;
+    	somme += fpi(xi);
+    	}
+
+        return somme*DX;
     }
 
 

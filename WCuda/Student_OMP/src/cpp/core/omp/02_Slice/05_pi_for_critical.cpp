@@ -10,8 +10,6 @@
  |*		Imported	 	*|
  \*-------------------------------------*/
 
-
-
 /*--------------------------------------*\
  |*		Public			*|
  \*-------------------------------------*/
@@ -46,8 +44,21 @@ bool isPiOMPforCritical_Ok(int n)
  */
 double piOMPforCritique(int n)
     {
-    //TODO
-    return -1;
+    double somme = 0;
+    const double DX = 1 / (double) n;
+    double xi =0;
+
+#pragma omp parallel for private(xi) // fait le for en parallel
+    for (int i = 1; i <= n; i++)
+	{
+	xi = i * DX;
+#pragma omp critical (toto)
+	    {
+	    somme += fpi(xi);
+	    }
+	}
+
+    return somme * DX;
     }
 
 /*----------------------------------------------------------------------*\
