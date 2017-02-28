@@ -1,28 +1,24 @@
-#include <iostream>
-
-#include "RipplingProvider.h"
 #include "MandelbrotProvider.h"
+#include "Mandelbrot.h"
 
-#include "Viewer_CPU.h"
-#include "Settings_CPU.h"
+#include "MathTools.h"
+
+#include "ImageAnimable_CPU.h"
+#include "DomaineMath_CPU.h"
 using namespace cpu;
 
-using std::cout;
-using std::endl;
 
 /*----------------------------------------------------------------------*\
  |*			Declaration 					*|
  \*---------------------------------------------------------------------*/
 
 /*--------------------------------------*\
- |*		Imported		*|
+ |*		Imported	 	*|
  \*-------------------------------------*/
 
 /*--------------------------------------*\
  |*		Public			*|
  \*-------------------------------------*/
-
-int mainImage(Settings& settings);
 
 /*--------------------------------------*\
  |*		Private			*|
@@ -37,30 +33,40 @@ int mainImage(Settings& settings);
  \*-------------------------------------*/
 
 /*--------------------------------------*\
- |*		Private			*|
+ |*		Surcharge		*|
  \*-------------------------------------*/
 
-int mainImage(Settings& settings)
+/**
+ * Override
+ */
+Animable_I<uchar4>* MandelbrotProvider::createAnimable(void)
     {
-    cout << "\n[Image] mode" << endl;
+    DomaineMath domaineMath = DomaineMath(0, 0, 2 * PI, 2 * PI);
 
-    GLUTImageViewers::init(settings.getArgc(), settings.getArgv()); // only once
+    // Animation;
+    float dt = 2 * PI / 800;
+    int n = 2;
 
-    // ImageOption : (boolean,boolean) : (isSelection,isAnimation)
-    ImageOption zoomable(true,true,true,true);
-    ImageOption nozoomable(false,true,true,true);
+    // Dimension
+    int dw = 16 * 60 * 2;
+    int dh = 16 * 60;
 
-   // Viewer<RipplingProvider> rippling(nozoomable, 0, 0); //  imageOption px py
-    Viewer<MandelbrotProvider> mandelbrot(zoomable, 25, 25);
-
-    GLUTImageViewers::runALL();  // Bloquant, Tant qu'une fenetre est ouverte
-
-    cout << "\n[Image] end" << endl;
-
-    return EXIT_SUCCESS;
+    return new Mandelbrot(dw, dh, dt, n, domaineMath);
     }
+
+/**
+ * Override
+ */
+Image_I* MandelbrotProvider::createImageGL(void)
+    {
+    ColorRGB_01 colorTexte(0, 0, 0); // black
+    return new ImageAnimable_RGBA_uchar4(createAnimable(),colorTexte);
+    }
+
+/*--------------------------------------*\
+ |*		Private			*|
+ \*-------------------------------------*/
 
 /*----------------------------------------------------------------------*\
  |*			End	 					*|
  \*---------------------------------------------------------------------*/
-
