@@ -59,11 +59,24 @@ class RipplingMath
 	    {
 	    // TODO cf fonction math pdf
 	    // use focntion dij ci-dessous
+	    float dij10 = 0.0;
+	    dij(i, j, &dij10);
+	    float denominateur =  (dij10/10) +1;
+
+	    float nominateur = 0.0;
+
+	    nominateur = cosf((dij10/10)-(t/7));
+	    *ptrlevelGris = 128 + 127*(nominateur/denominateur);
+
 	    }
 
 	void dij(int i, int j, float* ptrResult)
 	    {
 	    //TODO cf fonction math pdf
+	    float fi = i - this->dim2;
+	    float fj = j - this->dim2;
+
+	    *ptrResult = sqrtf((fi*fi + fj*fj));
 	    }
 
 	/*--------------------------------------*\

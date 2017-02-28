@@ -460,4 +460,5 @@
 <workingSet IMemento.internal.id="Tuto_API"/>
 <workingSet IMemento.internal.id="Tuto_Base"/>
 </workingSet>
+<workingSet aggregate="true" factoryID="org.eclipse.ui.internal.WorkingSetFactory" id="1488285941972_319" label="Window Working Set" name="Aggregate for window 1488285941972"/>
 </workingSetManager>

@@ -35,11 +35,11 @@ int mainAnimable(Settings& settings);
  \*-------------------------------------*/
 
 static void vague();
-static void damier();
-static void vagueGray();
-static void damierRGBAFloat4();
-static void damierHSBAFloat4();
-static void damierHueFloat();
+//static void damier();
+//static void vagueGray();
+//static void damierRGBAFloat4();
+//static void damierHSBAFloat4();
+//static void damierHueFloat();
 
 // Tools
 template<typename T>
