@@ -31,7 +31,7 @@ class RipplingMath
 	// constructeur copie automatique car pas pointeur dans VagueMath
 
 	__device__
-	   virtual ~RipplingMath()
+	    virtual ~RipplingMath()
 	    {
 	    // rien
 	    }
@@ -69,13 +69,24 @@ class RipplingMath
 	    // 			Step1 : Delete le contenur de ce fichier (si!),
 	    // 			Step2 : Copie-past le contenu de RipplingMath.h de omp,
 	    // 			Step3 : Ajouter __device__  devant methode et constructeur!
+	    float dij10 = dij(i, j);
+	    float denominateur = (dij10 / 10) + 1;
+
+	    float nominateur = 0.0;
+
+	    nominateur = cosf((dij10 / 10) - (t / 7));
+	    *ptrLevelGris = 128 + 127 * (nominateur / denominateur);
+
 	    }
 
 	__device__
-	float  dij(int i, int j)
+	float dij(int i, int j)
 	    {
 	    //TODO cf fonction math pdf
-	    // return ...
+	    float fi = i - this->dim2;
+	    float fj = j - this->dim2;
+
+	    return sqrtf((fi * fi + fj * fj));
 	    }
 
 	/*--------------------------------------*\

@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename resource &apos;Student_Cuda_Image/src/cpp/core/02_Mandelbrot_Julia/provider/MandelbrotProvider.cu&apos; to &apos;MandelbrotProvider.cpp&apos;" description="Rename resource &apos;MandelbrotProvider.cu&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="src/cpp/core/02_Mandelbrot_Julia/provider/MandelbrotProvider.cu" name="MandelbrotProvider.cpp" stamp="1488892628157" updateReferences="true"/>
+</session>
