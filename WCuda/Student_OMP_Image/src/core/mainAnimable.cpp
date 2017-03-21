@@ -2,6 +2,7 @@
 #include <stdlib.h>
 
 #include "RipplingProvider.h"
+#include "MandelbrotProvider.h"
 
 #include "Animateur_CPU.h"
 #include "Settings_CPU.h"
@@ -30,6 +31,7 @@ int mainAnimable(Settings& settings);
  \*-------------------------------------*/
 
 static void rippling();
+static void mandelbrot();
 
 // Tools
 template<typename T>
@@ -47,8 +49,8 @@ int mainAnimable(Settings& settings)
     {
     cout << "\n[Animable] mode" << endl;
 
-    rippling();
-    // mandelbrot();
+    //rippling();
+    mandelbrot();
 
     cout << "\n[Animable] end" << endl;
 
@@ -64,6 +66,14 @@ void rippling()
     const int NB_ITERATION = 1000;
 
     RipplingProvider provider;
+    animer<uchar4>(&provider, NB_ITERATION);
+    }
+
+void mandelbrot()
+    {
+    const int NB_ITERATION = 1000;
+
+    MandelbrotProvider provider;
     animer<uchar4>(&provider, NB_ITERATION);
     }
 

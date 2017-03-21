@@ -59,7 +59,7 @@ Mandelbrot::~Mandelbrot(void)
  */
 void Mandelbrot::animationStep()
     {
-    this->t = variateurAnimation.varierAndGet(); // in [0,2pi]
+    this->t = variateurAnimation.varierAndGet(); // in [0,120]
     }
 
 /*--------------------------------------*\
@@ -136,7 +136,7 @@ void Mandelbrot::workPixel(uchar4* ptrColorIJ,int i, int j,const DomaineMath& do
     double y;
     domaineMath.toXY(i, j, &x, &y); // fill (x,y) from (i,j)
 
-   // float t=variateurAnimation.get();
+    //float t=variateurAnimation.get();
 
     ptrMandelbrotMath->colorXY(ptrColorIJ,x, y, t); // in [01]
     }

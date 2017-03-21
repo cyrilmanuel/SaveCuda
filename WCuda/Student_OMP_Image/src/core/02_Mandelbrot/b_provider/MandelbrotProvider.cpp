@@ -41,11 +41,11 @@ using namespace cpu;
  */
 Animable_I<uchar4>* MandelbrotProvider::createAnimable(void)
     {
-    DomaineMath domaineMath = DomaineMath(-2.1, -1.3, 0.8, 1.3);
+    DomaineMath domaineMath = DomaineMath(-1.3968,-1.3578, -0.03362 , 0.0013973);
 
     // Animation;
     int dt = 1;
-    int n = 12;
+    int n = 102;
 
     // Dimension
     int dw = 16 * 60 * 2;

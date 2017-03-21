@@ -2,6 +2,7 @@
 
 #include <math.h>
 #include "MathTools.h"
+#include "Sphere.h"
 
 #include "ColorTools_GPU.h"
 using namespace gpu;
