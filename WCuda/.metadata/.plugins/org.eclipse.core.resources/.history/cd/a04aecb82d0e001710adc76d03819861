@@ -45,7 +45,7 @@ Animable_I<uchar4>* MandelbrotProvider::createAnimable(void)
 
     // Animation;
     int dt = 1;
-    int n = 12;
+    int n = 2;
 
     // Dimension
     int dw = 16 * 60 * 2;

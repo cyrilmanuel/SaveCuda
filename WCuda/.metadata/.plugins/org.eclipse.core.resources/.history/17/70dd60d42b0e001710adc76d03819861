@@ -72,11 +72,6 @@ class MandelbrotMath
 		    {
 		    return k; // condition sortie HSB TROUVER
 		    }
-		aCopy = a0;
-		// = la hue donc le retunr ici égale a noir si explosion
-		// couleur si non
-		a0 = ((a0 * a0) - (b0 * b0)) + x;
-		b0 = 2 * aCopy * b0 + y;
 		}
 	    return 0;
 	    }

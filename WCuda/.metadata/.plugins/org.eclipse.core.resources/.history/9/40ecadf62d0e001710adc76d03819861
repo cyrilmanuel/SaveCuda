@@ -78,7 +78,7 @@ class MandelbrotMath
 		a0 = ((a0 * a0) - (b0 * b0)) + x;
 		b0 = 2 * aCopy * b0 + y;
 		}
-	    return 0;
+	    return 255;
 	    }
 
 	/*--------------------------------------*\
