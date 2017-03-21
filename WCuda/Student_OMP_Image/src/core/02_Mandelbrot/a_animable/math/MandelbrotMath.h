@@ -62,7 +62,24 @@ class MandelbrotMath
 
 	float f(float x, float y, float t)
 	    {
-	    return sin(x * n + t) * cos(y * n + t);
+	    float a0 = 0;
+	    float b0 = 0;
+	    float aCopy = 0;
+
+	    for (int k=0; k<=N; K++)
+		{
+		  if((a0*a0) + (b0*b0) >4)
+		      {
+			  <// condition sortie HSB TROUVER
+		      }
+		  float aCopy = a0;
+		  		// = la hue donc le retunr ici égale a noir si explosion
+		  		// couleur si non
+		  a0 = ((a0*a0)-(b0*b0))+x;
+		  b0 = 2*aCopy*b0+y
+		}
+	    //black
+	    return 0;
 	    }
 
 	/*--------------------------------------*\
