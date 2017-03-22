@@ -21,7 +21,7 @@ class MandelbrotMath
     public:
 
 	__device__ MandelbrotMath(uint n) :
-		calibreur(Interval<float>(0, 120), Interval<float>(0, 1))
+		calibreur(Interval<float>(0, n), Interval<float>(0, 1))
 	    {
 	    this->n = n;
 	    }
