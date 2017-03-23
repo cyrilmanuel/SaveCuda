@@ -2,14 +2,15 @@
 #include <stdlib.h>
 
 #include "RipplingProvider.h"
+#include "MandelbrotProvider.h"
+#include "RayTracingProvider.h"
 
-#include "Animateur_CPU.h"
-#include "Settings_CPU.h"
-using namespace cpu;
+#include "Animateur_GPU.h"
+#include "Settings_GPU.h"
+using namespace gpu;
 
 using std::cout;
 using std::endl;
-using std::string;
 
 /*----------------------------------------------------------------------*\
  |*			Declaration 					*|
@@ -30,6 +31,8 @@ int mainAnimable(Settings& settings);
  \*-------------------------------------*/
 
 static void rippling();
+static void mandelbrot();
+//static void raytracing();
 
 // Tools
 template<typename T>
@@ -47,8 +50,11 @@ int mainAnimable(Settings& settings)
     {
     cout << "\n[Animable] mode" << endl;
 
-    rippling();
-    // mandelbrot();
+    // Attention : pas tous a la fois
+
+    //rippling();
+    mandelbrot();
+    //raytracing();
 
     cout << "\n[Animable] end" << endl;
 
@@ -59,14 +65,31 @@ int mainAnimable(Settings& settings)
  |*		Private			*|
  \*-------------------------------------*/
 
-void rippling()
+/*void rippling()
     {
-    const int NB_ITERATION = 1000;
+    const int NB_ITERATION = 50000;
 
     RipplingProvider provider;
-    animer<uchar4>(&provider, NB_ITERATION);
+    animer<uchar4>(&provider,NB_ITERATION);
+    }
+*/
+void mandelbrot()
+    {
+    // NOMBRE DE CYCLE MACHINE
+    const int NB_ITERATION = 50000;
+
+    MandelbrotProvider provider;
+    animer<uchar4>(&provider,NB_ITERATION);
     }
 
+/**void raytracing()
+    {
+    const int NB_ITERATION = 50000;
+
+    RayTracingProvider provider;
+    animer<uchar4>(&provider,NB_ITERATION);
+    }
+**/
 /*-----------------------------------*\
  |*		Tools	        	*|
  \*-----------------------------------*/

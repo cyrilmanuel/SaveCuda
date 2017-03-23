@@ -49,8 +49,8 @@ class RayTracingMath
 	    {
 	    // todo
 	    float distMinSphere = 10000;
-	    float hueSphereProche = -1;
-	    float brightnessSphereProche = -1;
+	    float hueSphereProche = -1000;
+	    float brightnessSphereProche = -100;
 
 
 	    // regarder la sphere au dessu
@@ -84,7 +84,7 @@ class RayTracingMath
 	    	   		ptrColor ->y = 0;
 	    	   		ptrColor ->z = 0;
 	    	   	    }else{
-	    	   	    ColorTools::HSB_TO_RVB(hueSphereProche, ptrColor); // update color
+	    	   	    ColorTools::HSB_TO_RVB(hueSphereProche,1.f,brightnessSphereProche, ptrColor); // update color
 	    	   	    }
 	    ptrColor->w = 255; // opaque
 	    }

@@ -65,17 +65,18 @@ int mainAnimable(Settings& settings)
  |*		Private			*|
  \*-------------------------------------*/
 
-void rippling()
+/*void rippling()
     {
     const int NB_ITERATION = 50000;
 
     RipplingProvider provider;
     animer<uchar4>(&provider,NB_ITERATION);
     }
-
+*/
 void mandelbrot()
     {
-    const int NB_ITERATION = 50000;
+    // NOMBRE DE CYCLE MACHINE
+    const int NB_ITERATION = 5000;
 
     MandelbrotProvider provider;
     animer<uchar4>(&provider,NB_ITERATION);
