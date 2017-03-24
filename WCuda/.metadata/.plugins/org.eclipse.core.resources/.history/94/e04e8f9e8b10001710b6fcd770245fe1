@@ -57,14 +57,13 @@ int mainImage(Settings& settings)
     //taille 450*450
     rippling.setSize(450, 450);
     rippling.setPosition(0, 0);
-
     Viewer<MandelbrotProvider>mandelbrot(zoomable, 25, 25); // imageOption px py
-    mandelbrot.setPosition(280, 100);
-    mandelbrot.setSize(450, 450);
 
+    mandelbrot.setSize(450, 450);
+    mandelbrot.setPosition(480, 400);
     Viewer<RayTracingProvider> raytracing(nozoomable, 25, 25); // imageOption px py
     raytracing.setSize(450, 450);
-    raytracing.setPosition(400, 200);
+    raytracing.setPosition(800, 800);
 
     // Common
     GLUTImageViewers::runALL(); // Bloquant, Tant qu'une fenetre est ouverte

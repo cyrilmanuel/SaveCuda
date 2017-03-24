@@ -50,21 +50,16 @@ int mainImage(Settings& settings)
     GLUTImageViewers::init(settings.getArgc(), settings.getArgv()); //only once
 
     // ImageOption : (boolean,boolean) : (isSelection,isAnimation)
-    ImageOption zoomable(true, true, true, true);
+    ImageOption zoomable(true,true,true,true);
     ImageOption nozoomable(false);
 
-    Viewer<RipplingProvider> rippling(nozoomable, 25, 25); // imageOption px py
+    Viewer<RipplingProvider> vague(nozoomable, 25, 25); // imageOption px py
+    // vague.setSize
+    // vague.setPosition
     //taille 450*450
-    rippling.setSize(450, 450);
-    rippling.setPosition(0, 0);
-
-    Viewer<MandelbrotProvider>mandelbrot(zoomable, 25, 25); // imageOption px py
-    mandelbrot.setPosition(280, 100);
-    mandelbrot.setSize(450, 450);
-
+    vague.setSize(w, h)
+    Viewer<MandelbrotProvider> mandelbrot(zoomable, 25, 25); // imageOption px py
     Viewer<RayTracingProvider> raytracing(nozoomable, 25, 25); // imageOption px py
-    raytracing.setSize(450, 450);
-    raytracing.setPosition(400, 200);
 
     // Common
     GLUTImageViewers::runALL(); // Bloquant, Tant qu'une fenetre est ouverte
