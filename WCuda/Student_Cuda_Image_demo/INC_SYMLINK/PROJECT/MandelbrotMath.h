@@ -1,0 +1,1 @@
+/home/arc7/SaveCuda/WCuda/Student_Cuda_Image_demo/../Student_Cuda_Image/src/cpp/core/02_Mandelbrot_Julia/moo/device/math/MandelbrotMath.h
