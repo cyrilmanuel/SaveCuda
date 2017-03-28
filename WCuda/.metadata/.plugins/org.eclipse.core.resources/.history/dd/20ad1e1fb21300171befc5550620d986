@@ -1,6 +1,7 @@
 #include <iostream>
-#include <stdlib.h>
-
+#include "VectorTools.h"
+#include "Grid.h"
+#include "Device.h"
 
 using std::cout;
 using std::endl;
@@ -13,21 +14,17 @@ using std::endl;
  |*		Imported	 	*|
  \*-------------------------------------*/
 
-extern bool useHello(void);
-extern bool useAddVecteur(void);
-extern bool useSlice(void);
+#include "Slice.h"
 
 /*--------------------------------------*\
  |*		Public			*|
  \*-------------------------------------*/
 
-int mainCore();
+bool useSlice(void);
 
 /*--------------------------------------*\
  |*		Private			*|
  \*-------------------------------------*/
-
-
 
 /*----------------------------------------------------------------------*\
  |*			Implementation 					*|
@@ -37,24 +34,30 @@ int mainCore();
  |*		Public			*|
  \*-------------------------------------*/
 
-int mainCore()
+bool useSlice()
     {
-    bool isOk = true;
-   // isOk &= useHello();
-   // isOk &=useAddVecteur();
-    isOK &=useSlice();
+    int nbSlice = 10;
 
-    cout << "\nisOK = " << isOk << endl;
-    cout << "\nEnd : mainCore" << endl;
+    float* ptrGM = new float[nbSlice];
 
-    return isOk ? EXIT_SUCCESS : EXIT_FAILURE;
+    // Partie interessante GPGPU
+	{
+	// Grid cuda
+	int mp = Device::getMPCount();
+	int coreMP = Device::getCoreCountMP();
+
+	dim3 dg = dim3(mp, 1, 1);  		// disons, a optimiser selon le gpu, peut drastiqument ameliorer ou baisser les performances
+	dim3 db = dim3(64, 1, 1);   	// disons, a optimiser selon le gpu, peut drastiqument ameliorer ou baisser les performances
+	Grid grid(dg, db);
+	}
+    delete[] ptrGM;
+
+    return true;
     }
 
 /*--------------------------------------*\
  |*		Private			*|
  \*-------------------------------------*/
-
-
 
 /*----------------------------------------------------------------------*\
  |*			End	 					*|
