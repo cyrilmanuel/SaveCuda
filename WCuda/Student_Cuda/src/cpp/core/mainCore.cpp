@@ -15,7 +15,7 @@ using std::endl;
 
 extern bool useHello(void);
 extern bool useAddVecteur(void);
-extern bool useSlice(void);
+extern bool useMontecarlo(void);
 
 /*--------------------------------------*\
  |*		Public			*|
@@ -42,7 +42,7 @@ int mainCore()
     bool isOk = true;
    // isOk &= useHello();
    // isOk &=useAddVecteur();
-    isOK &=useSlice();
+      isOK &=useMontecarlo();
 
     cout << "\nisOK = " << isOk << endl;
     cout << "\nEnd : mainCore" << endl;
