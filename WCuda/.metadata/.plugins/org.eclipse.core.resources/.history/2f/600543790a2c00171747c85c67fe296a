@@ -50,7 +50,7 @@ Animable_I<uchar4>* RayTracingProvider::createAnimable()
     dim3 dg = dim3(mp, 2, 1);  		// disons, a optimiser selon le gpu, peut drastiqument ameliorer ou baisser les performances
     dim3 db = dim3(coreMP, 2, 1);   	// disons, a optimiser selon le gpu, peut drastiqument ameliorer ou baisser les performances
     Grid grid(dg, db);
-    return new RayTracing(grid, dw, dh, dt, nbSphere);
+    return new RayTracing(grid, dw, dh, dt);
     }
 
 /**

@@ -24,7 +24,7 @@ class RayTracing: public Animable_I<uchar4>
 
     public:
 
-	RayTracing(const Grid& grid, uint w, uint h, float dt, int nbSphere = 20);
+	RayTracing(const Grid& grid, uint w, uint h, float dt, int nbSphere=20);
 	virtual ~RayTracing(void);
 
 	/*--------------------------------------*\

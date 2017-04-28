@@ -19,8 +19,8 @@ using namespace gpu;
 /*--------------------------------------*\
  |*		Imported	 	*|
  \*-------------------------------------*/
-__constant__ Sphere TAB_CM[20]; //20 = nb sphere
-__constant__ Sphere TAB_SM[20];
+__constant__ Sphere TAB_CM[LENGTH_CM];
+__constant__ Sphere TAB_SM[LENGTH_CM];
 /*--------------------------------------*\
  |*		Public			*|
  \*-------------------------------------*/

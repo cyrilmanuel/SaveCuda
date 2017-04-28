@@ -19,8 +19,8 @@ using namespace gpu;
 /*--------------------------------------*\
  |*		Imported	 	*|
  \*-------------------------------------*/
-__constant__ Sphere TAB_CM[20]; //20 = nb sphere
-__constant__ Sphere TAB_SM[20];
+__constant__ Sphere TAB_CM[LENGTH_CM];
+__constant__ Sphere TAB_SM[LENGTH_CM];
 /*--------------------------------------*\
  |*		Public			*|
  \*-------------------------------------*/
@@ -53,14 +53,15 @@ __global__ void raytracing_GM(uchar4* ptrDevPixels, uint w, uint h, float t, int
     }
 __global__ void raytracing_CM(uchar4* ptrDevPixels, uint w, uint h, float t)
     {
-    work(ptrDevPixels, w, h, t, LENGTH_CM, TAB_CM);
+    work(TAB_CM, LENGTH_CM, ptrDevPixels, w, h, t);
     }
 __global__ void raytracing_SM(uchar4* ptrDevPixels, uint w, uint h, float t, int nbSphere, Sphere* ptrDevTabSphere)
     {
-    extern __shared__ Sphere tabSM[];
-    copyGMToSM(nbSphere, ptrDevTabSphere, tabSM );
+    extern __shared__ Sphere
+    tabSM[];
+    copyGMToSM(ptrDevTabSphere, tabSM, nbSphere);
     __syncthreads();
-    work(ptrDevPixels, w, h, t, nbSphere, tabSM);
+    work(tabSM, nbSphere, ptrDevPixels, w, h, t);
     }
 
 /**
@@ -72,7 +73,7 @@ __host__ void uploadGPU(Sphere* SphereTab)
     HANDLE_ERROR(cudaMemcpyToSymbol(TAB_CM, tabValue, size, 0, cudaMemcpyHostToDevice));
     }
 
-__device__ void copyGMToSM(int nbSphere, Sphere* ptrDevTabGM, Sphere* ptrDevTabSM)
+__device__ void copyGMToSM(Sphere* ptrDevTabGM, Sphere* ptrDevTabSM, int nbSphere)
     {
 
     const int TID_LOCAL = Indice2D::tidLocal();
@@ -87,7 +88,7 @@ __device__ void copyGMToSM(int nbSphere, Sphere* ptrDevTabGM, Sphere* ptrDevTabS
 	}
     }
 
-__device__ void work(uchar4* ptrDevPixels, uint w, uint h, float t, int nbSphere, Sphere* ptrDevTabSphere)
+__device__ void work(Sphere* ptrDevTabSphere, int nbSphere, uchar4* ptrDevPixels, uint w, uint h, float t)
     {
     RayTracingMath rayTracingMath = RayTracingMath(nbSphere, ptrDevTabSphere);
 

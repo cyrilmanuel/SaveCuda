@@ -101,21 +101,8 @@ void RayTracing::process(uchar4* ptrDevPixels, uint w, uint h, const DomaineMath
 
     // TODO lancer le kernel avec <<<dg,db>>>
     // le kernel est importer ci-dessus (ligne 19)
-    static int i = 0;
 
-       if (i % 3 == 0)
-   	{
-   	 raytracing_GM<<<dg,db>>>(ptrDevPixels, w, h, t, this->nbSphere, this->ptrDevTabSphere);
-   	}
-       else if (i % 3 == 1)
-   	{
-   	 raytracing_CM<<<dg,db>>>(ptrDevPixels, w, h, t);
-   	}
-       else if (i % 3 == 2)
-   	{
-   	 raytracing_SM<<<dg,db, this->sizeOctet>>>(ptrDevPixels, w, h, t, this->nbSphere, this->ptrDevTabSphere);
-   	}
-       i++;
+    raytracing<<<dg,db>>>(ptrDevPixels,w,h,t,this->nbSphere, this->ptrDevTabSphere);
 
     Device::lastCudaError("RayTracing rgba uchar4 (after kernel)"); // facultatif, for debug only, remove for release
     }
