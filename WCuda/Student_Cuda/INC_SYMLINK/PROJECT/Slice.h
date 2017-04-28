@@ -1,0 +1,1 @@
+/home/arc7/SaveCuda/WCuda/Student_Cuda/src/cpp/core/03_Slice/host/Slice.h

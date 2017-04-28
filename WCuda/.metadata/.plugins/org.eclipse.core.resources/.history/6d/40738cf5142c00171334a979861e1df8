@@ -1,0 +1,89 @@
+#include "Slice.h"
+
+#include <iostream>
+
+#include "Device.h"
+#include <cmath>
+
+using std::cout;
+using std::endl;
+
+/*----------------------------------------------------------------------*\
+ |*			Declaration 					*|
+ \*---------------------------------------------------------------------*/
+
+/*--------------------------------------*\
+ |*		Imported	 	*|
+ \*-------------------------------------*/
+
+extern __global__ void Slice(float* ptrDevGMResultat, int nbSlice);
+
+/*--------------------------------------*\
+ |*		Public			*|
+ \*-------------------------------------*/
+
+/*--------------------------------------*\
+ |*		Private			*|
+ \*-------------------------------------*/
+
+/*----------------------------------------------------------------------*\
+ |*			Implementation 					*|
+ \*---------------------------------------------------------------------*/
+
+/*--------------------------------------*\
+ |*		Constructeur			*|
+ \*-------------------------------------*/
+
+Slice::Slice(const Grid& grid, int nbSlice, float tolerance)
+    {
+    // Grid
+	{
+	this->dg = grid.dg;
+	this->db = grid.db;
+	}
+
+    this->sizeOctet = db.x * db.y * db.z * sizeof(float);
+    this->tolerance = tolerance;
+    this->pi = 0;
+    this->nbSlice = nbSlice;
+
+	{
+
+	// MM (malloc Device)
+	    {
+	    Device::malloc(&ptrDevGMResultat, sizeof(float));
+	    Device::memclear(ptrDevGMResultat, sizeof(float));
+	    }
+	Device::lastCudaError("slice MM (end allocation)"); // temp debug, facultatif
+	}
+    }
+
+Slice::~Slice(void)
+    {
+    //MM (device free)
+	{
+	Device::free(ptrDevGMResultat);
+	Device::lastCudaError("AddVector MM (end deallocation)"); // temp debug, facultatif
+	}
+    }
+
+/*--------------------------------------*\
+ |*		Methode			*|
+ \*-------------------------------------*/
+
+float Slice::run()
+    {
+    Device::lastCudaError("slice (before)"); // temp debug
+    Slice<<<dg,db,sizeOctet>>>(ptrDevGMResultat, nbSlice); // assynchrone
+    Device::lastCudaError("slice (after)"); // temp debug
+    Device::memcpyDToH(&pi, ptrDevGMResultat, sizeof(float)); // barriere synchronisation implicite
+    return pi;
+    }
+
+/*--------------------------------------*\
+ |*		Private			*|
+ \*-------------------------------------*/
+
+/*----------------------------------------------------------------------*\
+ |*			End	 					*|
+ \*---------------------------------------------------------------------*/

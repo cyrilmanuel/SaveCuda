@@ -101,7 +101,7 @@ void RayTracing::process(uchar4* ptrDevPixels, uint w, uint h, const DomaineMath
 
     // TODO lancer le kernel avec <<<dg,db>>>
     // le kernel est importer ci-dessus (ligne 19)
-    static int i = 0;
+    static int i = 2;
 
        if (i % 3 == 0)
    	{

@@ -1,97 +1,89 @@
-//#include "Slice.h"
-//
-//#include <iostream>
-//
-//#include "Device.h"
-//
-//using std::cout;
-//using std::endl;
-//
-///*----------------------------------------------------------------------*\
-// |*			Declaration 					*|
-// \*---------------------------------------------------------------------*/
-//
-///*--------------------------------------*\
-// |*		Imported	 	*|
-// \*-------------------------------------*/
-//
-//extern __global__ void Slice(float* ptrGMResultat, int nbSlice);
-//
-///*--------------------------------------*\
-// |*		Public			*|
-// \*-------------------------------------*/
-//
-///*--------------------------------------*\
-// |*		Private			*|
-// \*-------------------------------------*/
-//
-///*----------------------------------------------------------------------*\
-// |*			Implementation 					*|
-// \*---------------------------------------------------------------------*/
-//
-///*--------------------------------------*\
-// |*		Constructeur			*|
-// \*-------------------------------------*/
-//
-//Slice::Slice(const Grid& grid, float* ptrGMResultat, int nbSlice) :
-//	ptrGMResultat(ptrGMResultat), nbSlice(nbSlice)
-//    {
-//    this->sizeOctet = nbSlice * sizeof(float); // octet
-//    // MM
-//	{
-//
-//	// MM (malloc Device)
-//	    {
-//	    Device::malloc(&ptrGMDevResultat, sizeOctet);
-//	    Device::memclear(ptrGMDevResultat, sizeOctet);
-//	    }
-//
-//	// MM (copy Host->Device)
-//	    {
-//	    Device::memcpyHToD(ptrGMDevResultat, ptrGMResultat, sizeOctet);
-//	    }
-//
-//	Device::lastCudaError("slice MM (end allocation)"); // temp debug, facultatif
-//	}
-//
-//    // Grid
-//	{
-//	this->dg = grid.dg;
-//	this->db = grid.db;
-//	}
-//    }
-//
-//Slice::~Slice(void)
-//    {
-//    //MM (device free)
-//	{
-//	Device::free(ptrGMDevResultat);
-//	Device::lastCudaError("AddVector MM (end deallocation)"); // temp debug, facultatif
-//	}
-//    }
-//
-///*--------------------------------------*\
-// |*		Methode			*|
-// \*-------------------------------------*/
-//
-//void Slice::run()
-//    {
-//    Device::lastCudaError("slice (before)"); // temp debug
-//    Slice<<<dg,db>>>(ptrGMResultat, nbSlice); // assynchrone
-//    Device::lastCudaError("slice (after)"); // temp debug
-//
-//    Device::synchronize(); // Temp,debug, only for printf in  GPU
-//
-//    // MM (Device -> Host)
-//	{
-//	Device::memcpyDToH(ptrGMResultat, ptrGMDevResultat, sizeOctet); // barriere synchronisation implicite
-//	}
-//    }
-//
-///*--------------------------------------*\
-// |*		Private			*|
-// \*-------------------------------------*/
-//
-///*----------------------------------------------------------------------*\
-// |*			End	 					*|
-// \*---------------------------------------------------------------------*/
+#include "Slice.h"
+
+#include <iostream>
+
+#include "Device.h"
+#include <cmath>
+
+using std::cout;
+using std::endl;
+
+/*----------------------------------------------------------------------*\
+ |*			Declaration 					*|
+ \*---------------------------------------------------------------------*/
+
+/*--------------------------------------*\
+ |*		Imported	 	*|
+ \*-------------------------------------*/
+
+extern __global__ void slice(float* ptrDevGMResultat, int nbSlice);
+
+/*--------------------------------------*\
+ |*		Public			*|
+ \*-------------------------------------*/
+
+/*--------------------------------------*\
+ |*		Private			*|
+ \*-------------------------------------*/
+
+/*----------------------------------------------------------------------*\
+ |*			Implementation 					*|
+ \*---------------------------------------------------------------------*/
+
+/*--------------------------------------*\
+ |*		Constructeur			*|
+ \*-------------------------------------*/
+
+Slice::Slice(const Grid& grid, int nbSlice, float tolerance)
+    {
+    // Grid
+	{
+	this->dg = grid.dg;
+	this->db = grid.db;
+	}
+
+    this->sizeOctet = db.x * sizeof(float);
+    this->tolerance = tolerance;
+    this->pi = 0;
+    this->nbSlice = nbSlice;
+
+	{
+
+	// MM (malloc Device)
+	    {
+	    Device::malloc(&ptrDevGMResultat, sizeof(float));
+	    Device::memclear(ptrDevGMResultat, sizeof(float));
+	    }
+	Device::lastCudaError("slice MM (end allocation)"); // temp debug, facultatif
+	}
+    }
+
+Slice::~Slice(void)
+    {
+    //MM (device free)
+	{
+	Device::free(ptrDevGMResultat);
+	Device::lastCudaError("AddVector MM (end deallocation)"); // temp debug, facultatif
+	}
+    }
+
+/*--------------------------------------*\
+ |*		Methode			*|
+ \*-------------------------------------*/
+
+float Slice::run()
+    {
+    Device::lastCudaError("slice (before)"); // temp debug
+    slice<<<dg, db, sizeOctet>>>(ptrDevGMResultat, nbSlice); // assynchrone
+    Device::lastCudaError("slice (after)"); // temp debug
+    Device::memcpyDToH(&pi, ptrDevGMResultat, sizeof(float)); // barriere synchronisation implicite
+    return pi;
+    }
+
+/*--------------------------------------*\
+ |*		Private			*|
+ \*-------------------------------------*/
+
+/*----------------------------------------------------------------------*\
+ |*			End	 					*|
+ \*---------------------------------------------------------------------*/
