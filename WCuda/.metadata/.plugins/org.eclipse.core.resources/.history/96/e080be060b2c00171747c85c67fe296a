@@ -62,7 +62,7 @@ RayTracing::RayTracing(const Grid& grid, uint w, uint h, float dt, int nbSphere)
     toGM(ptrTabSphere);
 
     //CM transfert
-    toCM(ptrTabSphere);
+    tocM(ptrTabSphere);
     }
 
 RayTracing::~RayTracing()
@@ -113,7 +113,7 @@ void RayTracing::process(uchar4* ptrDevPixels, uint w, uint h, const DomaineMath
    	}
        else if (i % 3 == 2)
    	{
-   	 raytracing_SM<<<dg,db, this->sizeOctetSpheres>>>(ptrDevPixels, w, h, t, this->nbSphere, this->ptrDevTabSphere);
+   	 raytracing_SM<<<dg,db, this->sizeOctet>>>(ptrDevPixels, w, h, t, this->nbSphere, this->ptrDevTabSphere);
    	}
        i++;
 

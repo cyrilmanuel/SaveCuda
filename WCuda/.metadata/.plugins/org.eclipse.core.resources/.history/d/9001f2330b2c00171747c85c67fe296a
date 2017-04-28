@@ -53,7 +53,7 @@ __global__ void raytracing_GM(uchar4* ptrDevPixels, uint w, uint h, float t, int
     }
 __global__ void raytracing_CM(uchar4* ptrDevPixels, uint w, uint h, float t)
     {
-    work(ptrDevPixels, w, h, t, 20, TAB_CM);
+    work(ptrDevPixels, w, h, t, LENGTH_CM, TAB_CM);
     }
 __global__ void raytracing_SM(uchar4* ptrDevPixels, uint w, uint h, float t, int nbSphere, Sphere* ptrDevTabSphere)
     {
@@ -68,8 +68,8 @@ __global__ void raytracing_SM(uchar4* ptrDevPixels, uint w, uint h, float t, int
  */
 __host__ void uploadGPU(Sphere* SphereTab)
     {
-    size_t size = 20 * sizeof(Sphere);
-    HANDLE_ERROR(cudaMemcpyToSymbol(TAB_CM, SphereTab, size, 0, cudaMemcpyHostToDevice));
+    size_t size = LENGTH_CM * sizeof(Sphere);
+    HANDLE_ERROR(cudaMemcpyToSymbol(TAB_CM, tabValue, size, 0, cudaMemcpyHostToDevice));
     }
 
 __device__ void copyGMToSM(int nbSphere, Sphere* ptrDevTabGM, Sphere* ptrDevTabSM)
