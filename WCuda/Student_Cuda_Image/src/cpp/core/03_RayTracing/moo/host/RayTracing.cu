@@ -42,7 +42,7 @@ extern __host__ void uploadGPU(Sphere* SphereTab);
  \*-------------------------*/
 
 RayTracing::RayTracing(const Grid& grid, uint w, uint h, float dt, int nbSphere) :
-	Animable_I<uchar4>(grid, w, h, "RayTracing_Cuda_RGBA_uchar4_Jeanneret_cyril")
+	Animable_I<uchar4>(grid, w, h, "RayTracing_Cuda_RGBA_uchar4_Jeanneret_cyril"), i(0)
     {
 
     // Inputs
@@ -101,33 +101,32 @@ void RayTracing::process(uchar4* ptrDevPixels, uint w, uint h, const DomaineMath
 
     // TODO lancer le kernel avec <<<dg,db>>>
     // le kernel est importer ci-dessus (ligne 19)
-    static int i = 2;
 
-       if (i % 3 == 0)
-   	{
-   	 raytracing_GM<<<dg,db>>>(ptrDevPixels, w, h, t, this->nbSphere, this->ptrDevTabSphere);
-   	}
-       else if (i % 3 == 1)
-   	{
-   	 raytracing_CM<<<dg,db>>>(ptrDevPixels, w, h, t);
-   	}
-       else if (i % 3 == 2)
-   	{
-   	 raytracing_SM<<<dg,db, this->sizeOctetSpheres>>>(ptrDevPixels, w, h, t, this->nbSphere, this->ptrDevTabSphere);
-   	}
-       i++;
-
-    Device::lastCudaError("RayTracing rgba uchar4 (after kernel)"); // facultatif, for debug only, remove for release
+    if (i % 3 == 0)
+	{
+    raytracing_GM<<<dg,db>>>(ptrDevPixels, w, h, t, this->nbSphere, this->ptrDevTabSphere);
     }
+else if (i % 3 == 1)
+    {
+raytracing_CM<<<dg,db>>>(ptrDevPixels, w, h, t);
+}
+else if (i % 3 == 2)
+{
+raytracing_SM<<<dg,db, this->sizeOctetSpheres>>>(ptrDevPixels, w, h, t, this->nbSphere, this->ptrDevTabSphere);
+}
+this->i++;
+
+Device::lastCudaError("RayTracing rgba uchar4 (after kernel)"); // facultatif, for debug only, remove for release
+}
 
 /**
  * Override
  * Call periodicly by the API
  */
 void RayTracing::animationStep()
-    {
-    t += dt;
-    }
+{
+t += dt;
+}
 
 /*--------------------------------------*\
  |*		Private			*|

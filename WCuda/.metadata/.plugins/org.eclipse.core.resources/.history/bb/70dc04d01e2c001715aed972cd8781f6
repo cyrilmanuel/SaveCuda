@@ -1,0 +1,73 @@
+#include <iostream>
+#include "VectorTools.h"
+#include "Grid.h"
+#include "Device.h"
+
+using std::cout;
+using std::endl;
+
+/*----------------------------------------------------------------------*\
+ |*			Declaration 					*|
+ \*---------------------------------------------------------------------*/
+
+/*--------------------------------------*\
+ |*		Imported	 	*|
+ \*-------------------------------------*/
+
+#include "Montecarlo.h"
+
+/*--------------------------------------*\
+ |*		Public			*|
+ \*-------------------------------------*/
+#define PI 3.14159265358979323846264338327950288419716939937510
+
+bool useMontecarlo(void);
+
+/*--------------------------------------*\
+ |*		Private			*|
+ \*-------------------------------------*/
+
+/*----------------------------------------------------------------------*\
+ |*			Implementation 					*|
+ \*---------------------------------------------------------------------*/
+
+/*--------------------------------------*\
+ |*		Public			*|
+ \*-------------------------------------*/
+
+bool useMontecarlo()
+    {
+    int nbSlice = 10;
+
+    float* ptrGM = new float[nbSlice];
+
+    // Partie interessante GPGPU
+	{
+	// Grid cuda
+	int mp = Device::getMPCount();
+	int coreMP = Device::getCoreCountMP();
+
+	dim3 dg = dim3(64, 1, 1);  		// disons, a optimiser selon le gpu, peut drastiqument ameliorer ou baisser les performances
+	dim3 db = dim3(128, 1, 1);   	// disons, a optimiser selon le gpu, peut drastiqument ameliorer ou baisser les performances
+	Grid grid(dg, db);
+	}
+	//MonteCarlo montecarlo()
+
+    delete[] ptrGM;
+
+     float pi = montecarlo.run();
+
+    cout << "Exact Pi : \t" << PI << endl;
+    cout << "Estimation : \t" << this->pi << endl;
+
+    return true;
+    }
+
+/*--------------------------------------*\
+ |*		Private			*|
+ \*-------------------------------------*/
+
+/*----------------------------------------------------------------------*\
+ |*			End	 					*|
+ \*---------------------------------------------------------------------*/
+

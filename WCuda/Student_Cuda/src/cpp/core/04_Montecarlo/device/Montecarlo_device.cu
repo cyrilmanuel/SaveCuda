@@ -1,82 +1,83 @@
-//#include "Indice2D.h"
-//#include "Indice1D.h"
-//#include "cudaTools.h"
-//
-//#include "reductionADD.h"
-//#include <stdio.h>
-//
-///*----------------------------------------------------------------------*\
-// |*			Declaration 					*|
-// \*---------------------------------------------------------------------*/
-//
-///*--------------------------------------*\
-// |*		Imported	 	*|
-// \*-------------------------------------*/
-//
-///*--------------------------------------*\
-// |*		Public			*|
-// \*-------------------------------------*/
-//
-//__global__ void Montecarlo(float* ptrGMResultat, int nbSlice, float* ptrGenerator);
-//
-///*--------------------------------------*\
-// |*		Private			*|
-// \*-------------------------------------*/
-//
-//static __device__ void reductionIntraThread(float* tabSM, int nbSlice, float* ptrGenerator);
-//
-///*----------------------------------------------------------------------*\
-// |*			Implementation 					*|
-// \*---------------------------------------------------------------------*/
-//
-///*--------------------------------------*\
-// |*		Public			*|
-// \*-------------------------------------*/
-//
-///**
-// * output : void required !!
-// */
-//__global__ void Montecarlo(float* ptrGMResultat, int nbSlice, float* ptrGenerator)
-//    {
-//    extern __shared__ float tabSM[];
-//    reductionIntraThread(tabSM, nbSlice);
-//    __syncthreads();
-//    reductionADD<float>(tabSM, ptrGMResultat);
-//    }
-//
-///*--------------------------------------*\
-// |*		Private			*|
-// \*-------------------------------------*/
-//
-//__device__ float work(float x, float y);
-//    {
-//    // regarde si la fleche est en dessous ou en dessus
-//    return 1;
-//    }
-//
-//__device__ void reductionIntraThread(float* tabSM, int nbSlice, float* ptrGenerator)
-//    {
-//
-//    const int TID = Indice1D::tid();
-//
-//    // Global Memory -> Register (optimization)
-//    curandState localGenerator = ptrGenerator[TID];
-//
-//    float xAlea;
-//    float yAlea;
-//    for (long i = 1; i <= n; i++)
-//    {
-//    xAlea = curand_uniform(&localGenerator);
-//    yAlea = curand_uniform(&localGenerator);
-//
-//    // la fonction work va pouvoir determiner si le thread (plus précisement la flechette)
-//    // se trouve en dessus ou en dessous dans le caré
-//    work(xAlea,yAlea);
-//
-//    }
-//
-//}
-///*----------------------------------------------------------------------*\
-// |*			End	 					*|
-// \*---------------------------------------------------------------------*/
-//
+#include "Indice1D.h"
+#include "cudaTools.h"
+#include "reductionADD.h"
+#include <curand_kernel.h>
+#include <limits.h>
+
+#include <stdio.h>
+
+
+__global__ void montecarlo(int* ptrDevNx, int nbSamples, float hauteurDeCible, curandState* tabDevGenerator);
+__global__ void setup_kernel_rand(curandState* tabDevGenerator, int deviceId);
+
+__device__ void reductionIntraThread(int* tabSM, int nbSamples, float hauteurDeCible, curandState* tabDevGenerator);
+__device__ float fonction2Pi(float x);
+__device__ int work(float x, float y);
+
+/**
+ * output : void required !!
+ */
+__global__ void montecarlo(int* ptrDevNx, int nbSamples, float hauteurDeCible, curandState* tabDevGenerator)
+    {
+    extern __shared__ int tab_SM[]; //size defined in calling of kernel
+
+    reductionIntraThread(tab_SM, nbSamples, hauteurDeCible, tabDevGenerator );
+    __syncthreads();
+    reductionADD<int>(tab_SM, ptrDevNx);
+    }
+
+__device__ void reductionIntraThread(int* tabSM, int nbSamples, float hauteurDeCible, curandState* tabDevGenerator)
+    {
+    const int TID=Indice1D::tid();
+    const int TID_LOCAL = Indice1D::tidLocal();
+
+    curandState localGenerator = tabDevGenerator[TID];
+    float xAlea;
+    float yAlea;
+    float tmp = 0;
+    for (int i = 1; i <= nbSamples; i++)
+        {
+        xAlea = curand_uniform(&localGenerator);
+        yAlea = curand_uniform(&localGenerator);
+
+        tmp += work(xAlea, hauteurDeCible * yAlea);
+        }
+
+    tabSM[TID_LOCAL] = tmp;
+
+    tabDevGenerator [TID] = localGenerator;
+    }
+
+__device__ float fonction2Pi(float x)
+    {
+    return 1.f / (1.f + x * x);
+    }
+
+// Each thread gets same seed, a different sequence number
+// no offset
+__global__
+void setup_kernel_rand(curandState* tabDevGenerator, int deviceId)
+    {
+    // Customisation du generator:
+    // Proposition, au lecteur de faire mieux !
+    // Contrainte : Doit etre différent d'un GPU à l'autre
+    // Contrainte : Doit etre différent d?un thread à l?autre
+    const int TID = Indice1D::tid();
+    int deltaSeed = deviceId * INT_MAX / 10000;
+    int deltaSequence = deviceId * 100;
+    int deltaOffset = deviceId * 100;
+    int seed = 1234 + deltaSeed;
+    int sequenceNumber = TID + deltaSequence;
+    int offset = deltaOffset;
+    curand_init(seed, sequenceNumber, offset, &tabDevGenerator[TID]);
+    }
+
+__device__ int work(float x, float y)
+    {
+	if (fonction2Pi(x) < y){
+	    return 0;
+	}else
+	    {
+	    return 1;
+	    }
+    }

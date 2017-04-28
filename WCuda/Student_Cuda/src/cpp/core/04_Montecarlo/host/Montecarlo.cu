@@ -1,101 +1,96 @@
-//#include <iostream>
-//
-//#include "Device.h"
-//#include "Montecarlo.h"
-//
-//using std::cout;
-//using std::endl;
-//
-///*----------------------------------------------------------------------*\
-// |*			Declaration 					*|
-// \*---------------------------------------------------------------------*/
-//
-///*--------------------------------------*\
-// |*		Imported	 	*|
-// \*-------------------------------------*/
-//
-//extern __global__ void Montecarlo(float* ptrGMResultat, int nbSlice, float* ptrGenerator);
-//
-///*--------------------------------------*\
-// |*		Public			*|
-// \*-------------------------------------*/
-//
-///*--------------------------------------*\
-// |*		Private			*|
-// \*-------------------------------------*/
-//
-///*----------------------------------------------------------------------*\
-// |*			Implementation 					*|
-// \*---------------------------------------------------------------------*/
-//
-///*--------------------------------------*\
-// |*		Constructeur			*|
-// \*-------------------------------------*/
-//
-//Montecarlo::Montecarlo(const Grid& grid, float* ptrGMResultat, int nbSlice, float* ptrGenerator) :
-//	ptrGMResultat(ptrGMResultat), nbSlice(nbSlice), ptrGenerator(ptrGenerator)
-//    {
-//    this->sizeOctet = nbSlice * sizeof(float); // octet
-//    // MM
-//	{
-//
-//	// MM (malloc Device)
-//	    {
-//	    Device::malloc(&ptrGMDevResultat, sizeOctet);
-//	    Device::malloc(&ptrGenerator, sizeOctet);
-//
-//	    Device::memclear(ptrGMDevResultat, sizeOctet);
-//	    Device::memclear(ptrGenerator, sizeOctet);
-//	    }
-//
-//	// MM (copy Host->Device)
-//	    {
-//	    Device::memcpyHToD(ptrGMDevResultat, ptrGMResultat, sizeOctet);
-//	    Device::memcpyHToD(ptrDevGenerator, ptrGenerator, sizeOctet);
-//	    }
-//
-//	Device::lastCudaError("montecarlo MM (end allocation)"); // temp debug, facultatif
-//	}
-//
-//    // Grid
-//	{
-//	this->dg = grid.dg;
-//	this->db = grid.db;
-//	}
-//    }
-//
-//Montecarlo::~Montecarlo(void)
-//    {
-//    //MM (device free)
-//	{
-//	Device::free(ptrGMDevResultat);
-//	Device::free(ptrDevGenerator);
-//	Device::lastCudaError("AddVector MM (end deallocation)"); // temp debug, facultatif
-//	}
-//    }
-//
-///*--------------------------------------*\
-// |*		Methode			*|
-// \*-------------------------------------*/
-//
-//void Montecarlo::run()
-//    {
-//    Device::lastCudaError("slice (before)"); // temp debug
-//    Montecarlo<<<dg,db>>>(ptrGMResultat, nbSlice); // assynchrone
-//    Device::lastCudaError("slice (after)"); // temp debug
-//
-//    Device::synchronize(); // Temp,debug, only for printf in  GPU
-//
-//    // MM (Device -> Host)
-//	{
-//	Device::memcpyDToH(ptrGMResultat, ptrGMDevResultat, sizeOctet); // barriere synchronisation implicite
-//	}
-//    }
-//
-///*--------------------------------------*\
-// |*		Private			*|
-// \*-------------------------------------*/
-//
-///*----------------------------------------------------------------------*\
-// |*			End	 					*|
-// \*---------------------------------------------------------------------*/
+#include <iostream>
+#include <chrono>
+#include "Device.h"
+#include <cmath>
+#include "Montecarlo.h"
+typedef std::chrono::high_resolution_clock Clock;
+
+using std::cout;
+using std::endl;
+
+
+extern __global__ void montecarlo(int* ptrDevNx, int nbSamples, float hauteurCible,curandState* ptrDevCurand);
+extern __global__ void setup_kernel_rand(curandState* tabDevGenerator, int deviceId);
+
+
+MonteCarlo::MonteCarlo(const Grid& grid, int nbSamples, float hauteur, float tolerance)
+    {
+    // Grid
+        {
+        this->dg = grid.dg;
+        this->db = grid.db;
+        }
+
+    this->nbThreads = grid.threadCounts();
+    this->sizeSM = this->db.x * sizeof(int);
+    this->nbSamplesThread = nbSamples / nbThreads;
+    this->hauteurCible = hauteur;
+    this->tolerance = tolerance;
+    this->pi = 0;
+    this->nbSamples = nbSamples;
+
+
+
+    this->nbSuccessSamples = 0;
+    this->ptrDevCurand=NULL;
+    size_t sizeCurand = this->nbThreads * sizeof(curandState) ;
+    // MM
+        {
+
+        // MM (malloc Device)
+            {
+            Device::malloc(&ptrDevNx, sizeof(int));
+            Device::memclear(ptrDevNx, sizeof(int));
+
+            Device::malloc(&ptrDevCurand, sizeCurand);
+            Device::memclear(ptrDevCurand, sizeCurand);
+            }
+
+        Device::lastCudaError("MonteCarlo MM (end allocation)"); // temp debug, facultatif
+        }
+
+    }
+
+MonteCarlo::~MonteCarlo(void)
+    {
+    //MM (device free)
+        {
+        Device::free(ptrDevNx);
+        Device::free(ptrDevCurand);
+
+        Device::lastCudaError("MonteCarlo MM (end deallocation)"); // temp debug, facultatif
+        }
+    }
+
+
+float MonteCarlo::run()
+    {
+
+    auto t1 = Clock::now();
+
+    Device::lastCudaError("curand (before)"); // temp debug
+    setup_kernel_rand<<<dg, db>>>(ptrDevCurand, Device::getDeviceId());
+    Device::lastCudaError("montecarlo (before)"); // temp debug
+    montecarlo<<<dg, db, sizeSM>>>(ptrDevNx, nbSamplesThread, hauteurCible, ptrDevCurand);
+    Device::lastCudaError("montecarlo (after)"); // temp debug
+
+    Device::memcpyDToH(&nbSuccessSamples, ptrDevNx, sizeof(int)); // barriere synchronisation
+
+    auto t2 = Clock::now();
+    std::cout << "Performance : "
+              << std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1).count()
+              << " nanoseconds" << std::endl;
+
+    std::cout << "échantillion réussi : " << this->nbSuccessSamples << std::endl;
+
+    pi = 4.0 * nbSuccessSamples;
+    pi *= hauteurCible / (nbSamplesThread * nbThreads);
+
+    return pi;
+    }
+
+int MonteCarlo::getNbSuccessSamples()
+    {
+    std::cout << "Success samples : " << this->nbSuccessSamples << std::endl;
+    return this->nbSuccessSamples;
+    }

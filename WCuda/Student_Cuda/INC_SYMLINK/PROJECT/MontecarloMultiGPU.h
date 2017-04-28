@@ -1,0 +1,1 @@
+/home/arc7/SaveCuda/WCuda/Student_Cuda/src/cpp/core/06_MontecarloMulti/host/MontecarloMultiGPU.h

@@ -1,0 +1,106 @@
+#include <iostream>
+#include <chrono>
+#include "Device.h"
+#include <cmath>
+#include "Montecarlo.h"
+typedef std::chrono::high_resolution_clock Clock;
+
+using std::cout;
+using std::endl;
+
+
+extern __global__ void montecarlo(int* ptrDevNx, int nbSamples, curandState* ptrDevCurand, float targetHeight);
+extern __global__ void setup_kernel_rand(curandState* tabDevGenerator, int deviceId);
+
+
+MonteCarlo::MonteCarlo(const Grid& grid, int nbSamples, float targetHeight, float tolerance)
+    {
+    // Grid
+        {
+        this->dg = grid.dg;
+        this->db = grid.db;
+        }
+
+    this->nbThreads = grid.threadCounts();  // one dimensionnal block
+    this->sizeSM = this->db.x * sizeof(int);  // size of SM tab, one dimensionnal block
+    this->nbSamples = nbSamples;
+
+    this->nbSamplesPerThread = nbSamples / nbThreads;
+    this->targetHeight = targetHeight;
+    this->tolerance = tolerance;
+    this->pi = 0;
+    this->nbSuccessSamples = 0;
+
+    size_t sizeCurand = this->nbThreads * sizeof(curandState) ;
+    this->ptrDevCurand=NULL;
+
+    // MM
+        {
+
+        // MM (malloc Device)
+            {
+            Device::malloc(&ptrDevNx, sizeof(int));
+            Device::memclear(ptrDevNx, sizeof(int));
+
+            Device::malloc(&ptrDevCurand, sizeCurand);
+            Device::memclear(ptrDevCurand, sizeCurand);
+            }
+
+        Device::lastCudaError("MonteCarlo MM (end allocation)"); // temp debug, facultatif
+        }
+
+    }
+
+MonteCarlo::~MonteCarlo(void)
+    {
+    //MM (device free)
+        {
+        Device::free(ptrDevNx);
+        Device::free(ptrDevCurand);
+
+        Device::lastCudaError("MonteCarlo MM (end deallocation)"); // temp debug, facultatif
+        }
+    }
+
+
+float MonteCarlo::run()
+    {
+
+    auto t1 = Clock::now();
+
+    Device::lastCudaError("curand (before)"); // temp debug
+    setup_kernel_rand<<<dg, db>>>(ptrDevCurand, Device::getDeviceId());
+    Device::lastCudaError("montecarlo (before)"); // temp debug
+    montecarlo<<<dg, db, sizeSM>>>(ptrDevNx, nbSamplesPerThread, ptrDevCurand, targetHeight); // assynchrone
+    Device::lastCudaError("montecarlo (after)"); // temp debug
+
+    Device::memcpyDToH(&nbSuccessSamples, ptrDevNx, sizeof(int)); // barriere synchronisation implicite
+    //pi prend la valeur de Nx ici
+
+    auto t2 = Clock::now();
+
+    std::cout << "Performance Montecarlo : "
+              << std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1).count()
+              << " nanoseconds" << std::endl;
+
+    std::cout << "nb sample: "
+        << this->nbSamples
+	<< this->nbSamplesPerThread " nbSamples / nbThreads"
+    << this->targetHeight "targetHeight"
+   << this->tolerance = " tolerance"<< std::endl;
+
+
+
+    std::cout << "Success samples in run : " << this->nbSuccessSamples << std::endl;
+
+    pi = 4.0 * nbSuccessSamples;
+    pi *= targetHeight / (nbSamplesPerThread * nbThreads);
+
+    return pi;
+    }
+
+int MonteCarlo::getNbSuccessSamples()
+    {
+    std::cout << "Success samples : " << this->nbSuccessSamples << std::endl;
+    return this->nbSuccessSamples;
+    }

@@ -59,6 +59,7 @@ class RayTracing: public Animable_I<uchar4>
 	int nbSphere;
 	Sphere* ptrDevTabSphere;
 	size_t sizeOctetSpheres;
+	int i;
 
 	void toGM(Sphere*);
 	void toCM(Sphere*);
